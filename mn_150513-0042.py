@@ -54,10 +54,6 @@ key=[u'р', u'бп', u'гк', u'зс', u'дт', u'жшщчцч', u'вф', u'м',
 # dictName = 'dict_utf.txt'
 dictName = 'word_rus.txt'
 
-# Задаём имя файла для выходных данных
-# outFilename = 'out.txt'
-# outFilename = 'out_'+str(number)+'.txt'
-
 ##############################################################################
 ##############################################################################
 
@@ -75,6 +71,7 @@ if _platform == "linux" or _platform == "linux2":
 if not os.path.isfile(os.getcwd()+slash+dictName): 
     raise IOError(dictName+' is not exist')     
 
+# Задаём имя файла для выходных данных
 outFilename = 'out'+slash+'out_'+str(number)+'.txt'
 
 def printl(l):
