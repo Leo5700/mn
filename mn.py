@@ -1,5 +1,5 @@
-# coding: utf
-# Python: 2.79
+#!/usr/bin/env python 
+# -*- coding: utf-8 -*-
 
 '''
     150507-1500 ==
