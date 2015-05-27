@@ -2,17 +2,29 @@
 # Python: 2.79
 
 '''
-    150507-1500 == Трансформируем число в код в соответствии с ключом, 
-    получаем из словаря подходящие слова.
+    150507-1500 ==
+    Трансформируем число в код в соответствии с ключом, получаем из словаря 
+    подходящие слова.
 
-    Скрип работает под Windows и под Linux. Под Mac - не проверял.
+    Скрип написан под виндой, в среде Canopy.
 
-    TODO Добавить возможность вводить по нескольку чисел
+    150507-1751 == 
+    Да.. Расширяем кругозор.. Вот, узнал слово "жмудь".
+
+    DONE Найти словарь, состоящий только из существительных.
+         Готово, источник http://mytts.forum2x2.ru/t151-topic
+    DONE Проверить, как скрипт работет под linux.
+    FIXED После добавления новой строки в начало словаря 
+          под виндой из консоли cmd вылетает ошибка encode на эту строку.
+          Возможно, дело в типе символа конца строки.
+          Это было связано со странным символом, который винда иногда добавляет
+          в начало файлов.
     000000 ==
 '''
 
 import itertools
 import os
+from sys import platform as _platform
 import sys
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -29,9 +41,9 @@ if __name__ == "__main__":
 ##############################################################################
 
 # Задаём число для кодирования
-if number[-3:] == '.py': # Если скрипт запущен без параметра, в sys.argv
-                         # передаётся имя скрипта.
-    number = '64' # Числа, начинающиеся с нуля, должны быть заданы строкой.
+if number[-3:] == '.py': # Если скрипт запущен без параметра, 
+                                   # sys.argv - имя скрипта.
+    number = '057' # Числа, начин. с нуля, должны быть заданы строкой.
 
 
 # Задаём код
@@ -39,28 +51,33 @@ key=[u'р', u'бп', u'гк', u'зс', u'дт', u'жшщчцч', u'вф', u'м',
                     # Нулевой элемент key - это цифра "0", первый - "1" и т.д.
 
 # Задаём имя файла словаря
-dictName = 'word_rus_150525.txt'
+# dictName = 'dict_utf.txt'
+dictName = 'word_rus.txt'
 
 ##############################################################################
 ##############################################################################
 
 
-# Проверяем существование словаря
-abspath = os.path.abspath(__file__)
-absdir = os.path.dirname(abspath)
-absDictName = os.path.join(absdir, dictName)
-if not os.path.exists(absDictName): 
+
+
+
+# Проверка существования словаря:
+if _platform == "darwin":
+    print 'Hmm... osX...'
+if _platform == "win32": # x32 == x64
+    slash = '\\'
+if _platform == "linux" or _platform == "linux2":
+    slash = '/'
+if not os.path.isfile(os.getcwd()+slash+dictName): 
     raise IOError(dictName+' is not exist')     
 
-# Задаём имя файла для выходных данных, если нужно, создаём папку
-outFilename = os.path.join(absdir, 'out', str(number)+'.txt')
-if not os.path.exists(os.path.dirname(outFilename)): 
-    os.mkdir(os.path.dirname(outFilename))
-
+# Задаём имя файла для выходных данных
+outFilename = 'out'+slash+'out_'+str(number)+'.txt'
 
 def printl(l):
     '''
-    150507 == Функция для консоли Canopy.
+    150507 == 
+    Функция для консоли Canopy.
     Печатаем список, содержащий кириллицу, как строки.
     Иначе вместо кириллицы печатается крокозябра.
     000000 ==
@@ -80,28 +97,14 @@ def numToChar(number, key=[u'р', u'бп', u'гк', u'зс', u'дт', u'жшщч
     for c in str(a): # str(a) - от дурака
         f.append(s[int(c)])
     return f
-#
-def cleanString(S, space=' '):
-    '''
-    150525 == Функция удаляет из строки повторяющиеся пробелы, табуляции и пр.
-    tags: =очистить =строку.
-    Весь этот хлам превращается в "space".
-    000000 ==
-    '''
-    return space.join(S.split())
-
-
 
 # Читаем словарь
 d = open (dictName, 'r')
 words = []
 for w in d.readlines():
-    w = cleanString(w, '')
-    w = unicode(w, 'utf')
-    w = w.lower()
-    words.append(w)
-d.close()
-words.sort()
+    w = w.replace("\r",""); w = w.replace("\n","") # Удаляем все концы строк
+    #if w[-1] == '\n': w = w[:-1]
+    words.append(unicode(w, 'utf'))
 
 # Задаём согласные
 sogl = [u'б',u'в',u'г',u'д',u'ж',u'з',u'к',u'л',u'м',u'н',
